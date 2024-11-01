@@ -23,7 +23,7 @@ class FilmControllerTest {
             .build();
 
     @Test
-    public void TheVoidCreateShouldWorkCorrectly() {
+    public void theVoidCreateShouldWorkCorrectly() {
         Film createdFilm = controller.create(film);
         Assertions.assertEquals(film.getId(), createdFilm.getId(), "Фильм не был добавлен");
         Film filmWithFailName = film.toBuilder().name(failName).build();
@@ -37,7 +37,7 @@ class FilmControllerTest {
     }
 
     @Test
-    public void TheVoidUpdateShouldWorkCorrectly() {
+    public void theVoidUpdateShouldWorkCorrectly() {
         Film filmWithNullId = film.toBuilder().build();
         controller.create(film);
         Assertions.assertThrows(ConditionsNotMetException.class, () -> controller.update(filmWithNullId), "Контроллер пропустил фильм без Id");

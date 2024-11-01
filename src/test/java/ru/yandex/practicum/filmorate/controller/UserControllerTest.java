@@ -26,7 +26,7 @@ class UserControllerTest {
 
 
     @Test
-    public void TheVoidCreateShouldWorkCorrectly() {
+    public void theVoidCreateShouldWorkCorrectly() {
         User addedUser = controller.create(correctUser);
         Assertions.assertEquals(addedUser.getId(), correctUser.getId(), "Пользователь не был добавлен");
         Assertions.assertEquals(addedUser.getName(), correctUser.getLogin(), "При отсутствии имени контроллер не задал имени значение логина");
@@ -49,7 +49,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void TheVoidUpdateShouldWorkCorrectly() {
+    public void theVoidUpdateShouldWorkCorrectly() {
         User addedUser = controller.create(correctUser);
         User userWithNullId = addedUser.toBuilder().id(null).build();
         Assertions.assertThrows(ConditionsNotMetException.class, () -> controller.update(userWithNullId));
