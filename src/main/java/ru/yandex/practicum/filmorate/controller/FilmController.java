@@ -16,34 +16,17 @@ import java.util.List;
 public class FilmController {
     HashMap<Long, Film> films = new HashMap<>();
     private String warn = "Переданы некорректные данные";
+    final static LocalDate dateOfTheFirstFilm = LocalDate.of(1895, 12, 28);
 
     @PostMapping
     public Film create(@RequestBody Film film) {
-        if (film.getName() == null || film.getName().isBlank()) {
-            log.warn(warn);
-            throw new ConditionsNotMetException("Название фильма не может быть пустым");
+        if(validation(film)){
+            film.setId(getNextId());
+            films.put(film.getId(), film);
+            log.debug("Добавился новый фильм - {}", film);
+            return film;
         }
-        if (film.getDescription() != null) {
-            if (film.getDescription().length() > 200) {
-                log.warn(warn);
-                throw new ConditionsNotMetException("Описание фильма не может быть более 200 символов");
-            }
-        }
-        LocalDate dateOfTheFirstFilm = LocalDate.of(1895, 12, 28);
-
-        if (film.getReleaseDate() != null && film.getReleaseDate().isBefore(dateOfTheFirstFilm)) {
-            log.warn(warn);
-            throw new ConditionsNotMetException("Дата релиза фильма не может быть раньше даты релиза самого первого в мире фильма");
-        }
-
-        if (film.getDuration() < 0) {
-            log.warn(warn);
-            throw new ConditionsNotMetException("продолжительность фильма не может быть отрицательной");
-        }
-        film.setId(getNextId());
-        films.put(film.getId(), film);
-        log.debug("Добавился новый фильм - {}", film);
-        return film;
+        throw new ConditionsNotMetException(warn);
     }
 
     @PutMapping
@@ -83,6 +66,32 @@ public class FilmController {
         List<Film> allFilms = films.values().stream().toList();
         log.info("Отправлен весь список фильмов");
         return allFilms;
+    }
+
+    private boolean validation(Film film){
+        if (film.getName() == null || film.getName().isBlank()) {
+            log.warn("Передано пустое название фильма");
+            return false;
+        }
+        if (film.getDescription() != null) {
+            if (film.getDescription().length() > 200) {
+                log.warn("Передано описание фильма более 200 символов");
+                return false;
+            }
+        }
+
+        if (film.getReleaseDate() != null && film.getReleaseDate().isBefore(dateOfTheFirstFilm)) {
+            log.warn("Дата релиза фильма не может быть раньше даты релиза самого первого в мире фильма");
+            return false;
+        }
+
+        if (film.getDuration() < 0) {
+            log.warn("продолжительность фильма не может быть отрицательной");
+            return false;
+        }
+
+        return true;
+
     }
 
     private long getNextId() {
