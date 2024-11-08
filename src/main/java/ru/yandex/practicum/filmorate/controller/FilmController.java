@@ -16,11 +16,11 @@ import java.util.List;
 public class FilmController {
     HashMap<Long, Film> films = new HashMap<>();
     private String warn = "Переданы некорректные данные";
-    final static LocalDate dateOfTheFirstFilm = LocalDate.of(1895, 12, 28);
+    final LocalDate dateOfTheFirstFilm = LocalDate.of(1895, 12, 28);
 
     @PostMapping
     public Film create(@RequestBody Film film) {
-        if(validation(film)){
+        if (validation(film)) {
             film.setId(getNextId());
             films.put(film.getId(), film);
             log.debug("Добавился новый фильм - {}", film);
@@ -68,7 +68,7 @@ public class FilmController {
         return allFilms;
     }
 
-    private boolean validation(Film film){
+    private boolean validation(Film film) {
         if (film.getName() == null || film.getName().isBlank()) {
             log.warn("Передано пустое название фильма");
             return false;
